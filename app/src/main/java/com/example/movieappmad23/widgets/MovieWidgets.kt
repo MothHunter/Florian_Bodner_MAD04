@@ -39,7 +39,8 @@ import com.example.movieappmad23.ui.theme.Shapes
 fun MovieRow(
     movie: Movie = getMovies()[0],
     modifier: Modifier = Modifier,
-    onItemClick: (String) -> Unit = {}
+    onItemClick: (String) -> Unit = {},
+    onFavIconClick: (String) -> Unit = {}
 ) {
     Card(modifier = modifier
         .clickable {

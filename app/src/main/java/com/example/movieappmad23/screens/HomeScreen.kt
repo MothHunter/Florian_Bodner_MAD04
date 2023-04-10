@@ -16,9 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.movieappmad23.models.Movie
 import com.example.movieappmad23.models.MovieViewModel
-import com.example.movieappmad23.models.getMovies
 import com.example.movieappmad23.widgets.HomeTopAppBar
 import com.example.movieappmad23.widgets.MovieRow
 
@@ -77,14 +75,12 @@ fun MovieList(
     ) {
         items(movieViewModel.movieList) { movie ->
             MovieRow(
-                movie = movie,
+                movieViewModel = movieViewModel,
+                movie.id,
                 onItemClick = { movieId ->
                     Log.d("MovieItem", "got clicked on")
                     navController.navigate(Screen.DetailScreen.withId(movieId))
-                },
-                onFavIconClick = {movieID ->
-                    Log.d("FavIcon", "got clicked on")
-                    movieViewModel.toggleFavorite(movieID)}
+                }
             )
         }
     }

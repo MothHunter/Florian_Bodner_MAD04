@@ -11,7 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.example.movieappmad23.models.Movie
 import com.example.movieappmad23.models.MovieViewModel
-import com.example.movieappmad23.models.getMovies
 import com.example.movieappmad23.widgets.MovieRow
 import com.example.movieappmad23.widgets.SimpleTopAppBar
 
@@ -24,13 +23,13 @@ fun FavoriteScreen(navController: NavController,
             Text(text = "My Favorite Movies")
         }
     }){ padding ->
-        val movieList: List<Movie> = getMovies()
+        val movieList: List<Movie> = movieViewModel.getFavMovieList()
 
         Column(modifier = Modifier.padding(padding)) {
             LazyColumn {
                 items(movieList){ movie ->
                     MovieRow(
-                        movie = movie,
+                        movieViewModel, movieId = movie.id,
                         onItemClick = { movieId ->
                             navController.navigate(route = Screen.DetailScreen.withId(movieId))
                         }

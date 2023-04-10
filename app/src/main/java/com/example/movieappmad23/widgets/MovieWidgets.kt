@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
@@ -28,32 +29,33 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.example.movieappmad23.R
 import com.example.movieappmad23.models.Movie
-import com.example.movieappmad23.models.getMovies
+import com.example.movieappmad23.models.MovieViewModel
 import com.example.movieappmad23.ui.theme.Shapes
 
-@Preview
+//@Preview
 @Composable
 fun MovieRow(
-    movie: Movie = getMovies()[0],
+    movieViewModel: MovieViewModel = viewModel(),
+    movieId: String,
     modifier: Modifier = Modifier,
-    onItemClick: (String) -> Unit = {},
-    onFavIconClick: (String) -> Unit = {}
+    onItemClick: (String) -> Unit = {}
 ) {
     /*
     val interactionSource = remember {
         MutableInteractionSource()
     }
-
      */
+    val movie = movieViewModel.getMovieById(movieId)
     Card(modifier = modifier
         .clickable
-            //(interactionSource = interactionSource, indication = null)
-            {
+        //(interactionSource = interactionSource, indication = null)
+        {
             Log.d("MovieItem", "got clicked on1")
             onItemClick(movie.id)
         }
@@ -63,19 +65,27 @@ fun MovieRow(
         elevation = 10.dp
     ) {
         Column {
-            Box(modifier = Modifier
-                .height(150.dp)
-                .fillMaxWidth(),
+            Box(
+                modifier = Modifier
+                    .height(150.dp)
+                    .fillMaxWidth(),
                 contentAlignment = Alignment.TopEnd
             ) {
                 MovieImage(imageUrl = movie.images[0])
-                FavoriteIcon(onFavIconClick = onFavIconClick, movieId = movie.id)
+                FavoriteIcon(
+                    onFavIconClick = { movieID ->
+                        Log.d("FavIcon", "got clicked on")
+                        movieViewModel.toggleFavorite(movieID)
+                    },
+                    movieViewModel, movieId = movie.id
+                )
             }
 
             MovieDetails(modifier = Modifier.padding(12.dp), movie = movie)
         }
     }
 }
+
 
 @Composable
 fun MovieImage(imageUrl: String) {
@@ -95,20 +105,41 @@ fun MovieImage(imageUrl: String) {
 }
 
 @Composable
-fun FavoriteIcon(onFavIconClick: (String) -> Unit, movieId: String) {
+fun FavoriteIcon(
+    onFavIconClick: (String) -> Unit,
+    movieViewModel: MovieViewModel = viewModel(),
+    movieId: String
+) {
 
-    Box(modifier = Modifier
-        .wrapContentSize()
-        .padding(10.dp)
-        .clickable {
-            onFavIconClick(movieId)
-          },
+    Box(
+        modifier = Modifier
+            .wrapContentSize()
+            .padding(10.dp)
+            ,
         contentAlignment = Alignment.TopEnd
-    ){
-        Icon(
-            tint = MaterialTheme.colors.secondary,
-            imageVector = Icons.Default.FavoriteBorder,
-            contentDescription = "Add to favorites")
+    ) {
+        var toggleState by remember {
+            mutableStateOf(movieViewModel.getMovieById(movieId).isFavorite)
+        }
+        val interactionSource = remember {
+            MutableInteractionSource()
+        }
+        IconToggleButton(checked = toggleState, onCheckedChange = { toggleState = it }) {
+            Icon(
+                tint = MaterialTheme.colors.secondary,
+                imageVector = if (toggleState) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                contentDescription = "Favorite Movie",
+                modifier = Modifier
+                    .clickable(
+                        indication = null, // Assign null to disable the ripple effect
+                        interactionSource = interactionSource,
+                    ) {
+                        onFavIconClick(movieId)
+                        toggleState = movieViewModel.getMovieById(movieId).isFavorite
+                    }
+                    .size(32.dp)
+            )
+        }
     }
 }
 
@@ -133,9 +164,10 @@ fun MovieDetails(modifier: Modifier = Modifier, movie: Movie) {
         IconButton(
             modifier = Modifier.weight(1f),
             onClick = { expanded = !expanded }) {
-            Icon(imageVector =
-            if (expanded) Icons.Filled.KeyboardArrowDown
-            else Icons.Filled.KeyboardArrowUp,
+            Icon(
+                imageVector =
+                if (expanded) Icons.Filled.KeyboardArrowDown
+                else Icons.Filled.KeyboardArrowUp,
                 contentDescription = "expand",
                 modifier = Modifier
                     .size(25.dp),
@@ -149,7 +181,7 @@ fun MovieDetails(modifier: Modifier = Modifier, movie: Movie) {
         enter = fadeIn(),
         exit = fadeOut()
     ) {
-        Column (modifier = modifier) {
+        Column(modifier = modifier) {
             Text(text = "Director: ${movie.director}", style = MaterialTheme.typography.caption)
             Text(text = "Released: ${movie.year}", style = MaterialTheme.typography.caption)
             Text(text = "Genre: ${movie.genre}", style = MaterialTheme.typography.caption)
@@ -162,7 +194,13 @@ fun MovieDetails(modifier: Modifier = Modifier, movie: Movie) {
                 withStyle(style = SpanStyle(color = Color.DarkGray, fontSize = 13.sp)) {
                     append("Plot: ")
                 }
-                withStyle(style = SpanStyle(color = Color.DarkGray, fontSize = 13.sp, fontWeight = FontWeight.Light)){
+                withStyle(
+                    style = SpanStyle(
+                        color = Color.DarkGray,
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Light
+                    )
+                ) {
                     append(movie.plot)
                 }
             })

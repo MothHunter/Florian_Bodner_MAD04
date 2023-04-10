@@ -7,16 +7,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.movieappmad23.models.Movie
 import com.example.movieappmad23.models.MovieViewModel
-import com.example.movieappmad23.models.getMovies
 import com.example.movieappmad23.widgets.HorizontalScrollableImageView
 import com.example.movieappmad23.widgets.MovieRow
 import com.example.movieappmad23.widgets.SimpleTopAppBar
 
-fun filterMovie(movies: List<Movie>, movieId: String): Movie {
-    return movies.filter { it.id == movieId}[0]
-}
 @Composable
 fun DetailScreen(
     navController: NavController,
@@ -36,15 +31,15 @@ fun DetailScreen(
                 }
             },
         ) { padding ->
-            MainContent(Modifier.padding(padding), movie)
+            MainContent(Modifier.padding(padding), movieViewModel = movieViewModel, movieId)
         }
     }
 }
 
 @Composable
-fun MainContent(modifier: Modifier = Modifier, movie: Movie) {
+fun MainContent(modifier: Modifier = Modifier, movieViewModel: MovieViewModel, movieId: String) {
     Surface(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .fillMaxHeight()
     ) {
@@ -54,7 +49,7 @@ fun MainContent(modifier: Modifier = Modifier, movie: Movie) {
             verticalArrangement = Arrangement.Top
         ) {
 
-            MovieRow(movie = movie)
+            MovieRow(movieViewModel, movieId)
 
             Spacer(modifier = Modifier.height(8.dp))
 
@@ -62,7 +57,7 @@ fun MainContent(modifier: Modifier = Modifier, movie: Movie) {
 
             Text(text = "Movie Images", style = MaterialTheme.typography.h5)
 
-            HorizontalScrollableImageView(movie = movie)
+            HorizontalScrollableImageView(movie = movieViewModel.getMovieById(movieId))
         }
     }
 }

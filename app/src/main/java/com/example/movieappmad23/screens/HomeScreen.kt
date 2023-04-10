@@ -1,5 +1,6 @@
 package com.example.movieappmad23.screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -78,9 +79,10 @@ fun MovieList(
             MovieRow(
                 movie = movie,
                 onItemClick = { movieId ->
+                    Log.d("MovieItem", "got clicked on")
                     navController.navigate(Screen.DetailScreen.withId(movieId))
-                }
-
+                },
+                onFavIconClick = {movieID -> movieViewModel.toggleFavorite(movieID)}
             )
         }
     }

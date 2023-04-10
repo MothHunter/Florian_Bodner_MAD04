@@ -1,5 +1,6 @@
 package com.example.movieappmad23.widgets
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -44,6 +45,7 @@ fun MovieRow(
 ) {
     Card(modifier = modifier
         .clickable {
+            Log.d("MovieItem", "got clicked on1")
             onItemClick(movie.id)
         }
         .fillMaxWidth()
@@ -58,7 +60,7 @@ fun MovieRow(
                 contentAlignment = Alignment.Center
             ) {
                 MovieImage(imageUrl = movie.images[0])
-                FavoriteIcon()
+                FavoriteIcon(onFavIconClick = onFavIconClick, movieId = movie.id)
             }
 
             MovieDetails(modifier = Modifier.padding(12.dp), movie = movie)
@@ -84,10 +86,11 @@ fun MovieImage(imageUrl: String) {
 }
 
 @Composable
-fun FavoriteIcon() {
+fun FavoriteIcon(onFavIconClick: (String) -> Unit, movieId: String) {
     Box(modifier = Modifier
         .fillMaxSize()
-        .padding(10.dp),
+        .padding(10.dp)
+        .clickable{onFavIconClick(movieId)},
         contentAlignment = Alignment.TopEnd
     ){
         Icon(

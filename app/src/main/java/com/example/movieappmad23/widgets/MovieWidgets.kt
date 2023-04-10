@@ -5,6 +5,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -43,8 +44,16 @@ fun MovieRow(
     onItemClick: (String) -> Unit = {},
     onFavIconClick: (String) -> Unit = {}
 ) {
+    /*
+    val interactionSource = remember {
+        MutableInteractionSource()
+    }
+
+     */
     Card(modifier = modifier
-        .clickable {
+        .clickable
+            //(interactionSource = interactionSource, indication = null)
+            {
             Log.d("MovieItem", "got clicked on1")
             onItemClick(movie.id)
         }
@@ -57,7 +66,7 @@ fun MovieRow(
             Box(modifier = Modifier
                 .height(150.dp)
                 .fillMaxWidth(),
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.TopEnd
             ) {
                 MovieImage(imageUrl = movie.images[0])
                 FavoriteIcon(onFavIconClick = onFavIconClick, movieId = movie.id)
@@ -87,10 +96,13 @@ fun MovieImage(imageUrl: String) {
 
 @Composable
 fun FavoriteIcon(onFavIconClick: (String) -> Unit, movieId: String) {
+
     Box(modifier = Modifier
-        .fillMaxSize()
+        .wrapContentSize()
         .padding(10.dp)
-        .clickable{onFavIconClick(movieId)},
+        .clickable {
+            onFavIconClick(movieId)
+          },
         contentAlignment = Alignment.TopEnd
     ){
         Icon(

@@ -82,7 +82,9 @@ fun MovieList(
                     Log.d("MovieItem", "got clicked on")
                     navController.navigate(Screen.DetailScreen.withId(movieId))
                 },
-                onFavIconClick = {movieID -> movieViewModel.toggleFavorite(movieID)}
+                onFavIconClick = {movieID ->
+                    Log.d("FavIcon", "got clicked on")
+                    movieViewModel.toggleFavorite(movieID)}
             )
         }
     }

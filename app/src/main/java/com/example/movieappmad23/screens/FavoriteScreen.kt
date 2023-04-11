@@ -29,9 +29,13 @@ fun FavoriteScreen(navController: NavController,
             LazyColumn {
                 items(movieList){ movie ->
                     MovieRow(
-                        movieViewModel, movieId = movie.id,
+                        movie,
                         onItemClick = { movieId ->
                             navController.navigate(route = Screen.DetailScreen.withId(movieId))
+                        },
+                        onFavIconClick = {
+                            // should a un-favorited movie be removed from this screen instantly?
+                            movieViewModel.toggleFavorite(movie.id)
                         }
                     )
                 }

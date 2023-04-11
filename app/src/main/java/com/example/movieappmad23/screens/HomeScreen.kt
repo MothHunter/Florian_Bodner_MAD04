@@ -45,7 +45,12 @@ fun HomeScreen(navController: NavController = rememberNavController(), movieView
             }
         )
     }) { padding ->
-        MainContent(modifier = Modifier.padding(padding),navController = navController, movieViewModel = movieViewModel)
+        MainContent(modifier = Modifier.padding(padding),
+            navController = navController,
+            // @Leon: I'm not sure if we are supposed to pass the MovieViewModel down to MovieList,
+            // but it seems cleaner than passing the movie list AND the onClick for the FavIcon
+            // (which needs to access the viewModel)
+            movieViewModel = movieViewModel)
     }
 }
 
@@ -75,12 +80,12 @@ fun MovieList(
     ) {
         items(movieViewModel.movieList) { movie ->
             MovieRow(
-                movieViewModel = movieViewModel,
-                movie.id,
+                movie,
                 onItemClick = { movieId ->
                     Log.d("MovieItem", "got clicked on")
                     navController.navigate(Screen.DetailScreen.withId(movieId))
-                }
+                },
+                onFavIconClick = {movieViewModel.toggleFavorite(movie.id)}
             )
         }
     }

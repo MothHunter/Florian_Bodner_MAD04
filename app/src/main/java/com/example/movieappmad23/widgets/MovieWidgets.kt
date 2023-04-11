@@ -26,35 +26,28 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.example.movieappmad23.R
 import com.example.movieappmad23.models.Movie
-import com.example.movieappmad23.models.MovieViewModel
+import com.example.movieappmad23.models.getMovies
 import com.example.movieappmad23.ui.theme.Shapes
 
 //@Preview
 @Composable
 fun MovieRow(
-    movieViewModel: MovieViewModel = viewModel(),
-    movieId: String,
+    movie: Movie = getMovies()[0],
     modifier: Modifier = Modifier,
-    onItemClick: (String) -> Unit = {}
+    onItemClick: (String) -> Unit = {},
+    onFavIconClick: (String) -> Unit = {}
 ) {
-    /*
-    val interactionSource = remember {
-        MutableInteractionSource()
-    }
-     */
-    val movie = movieViewModel.getMovieById(movieId)
+
+
     Card(modifier = modifier
         .clickable
-        //(interactionSource = interactionSource, indication = null)
         {
             Log.d("MovieItem", "got clicked on1")
             onItemClick(movie.id)
@@ -69,15 +62,12 @@ fun MovieRow(
                 modifier = Modifier
                     .height(150.dp)
                     .fillMaxWidth(),
-                contentAlignment = Alignment.TopEnd
+                contentAlignment = Alignment.Center
             ) {
                 MovieImage(imageUrl = movie.images[0])
                 FavoriteIcon(
-                    onFavIconClick = { movieID ->
-                        Log.d("FavIcon", "got clicked on")
-                        movieViewModel.toggleFavorite(movieID)
-                    },
-                    movieViewModel, movieId = movie.id
+                    onFavIconClick = onFavIconClick,
+                    movie
                 )
             }
 
@@ -107,19 +97,19 @@ fun MovieImage(imageUrl: String) {
 @Composable
 fun FavoriteIcon(
     onFavIconClick: (String) -> Unit,
-    movieViewModel: MovieViewModel = viewModel(),
-    movieId: String
+    movie: Movie
 ) {
 
     Box(
         modifier = Modifier
-            .wrapContentSize()
-            .padding(10.dp)
-            ,
+            .fillMaxSize()
+            .padding(10.dp),
         contentAlignment = Alignment.TopEnd
     ) {
+        // using mutableStateOf seems like the wrong way to do this.
+        // find a way to observe changes in the movie item!
         var toggleState by remember {
-            mutableStateOf(movieViewModel.getMovieById(movieId).isFavorite)
+            mutableStateOf(movie.isFavorite)
         }
         val interactionSource = remember {
             MutableInteractionSource()
@@ -134,8 +124,8 @@ fun FavoriteIcon(
                         indication = null, // Assign null to disable the ripple effect
                         interactionSource = interactionSource,
                     ) {
-                        onFavIconClick(movieId)
-                        toggleState = movieViewModel.getMovieById(movieId).isFavorite
+                        onFavIconClick(movie.id)
+                        toggleState = movie.isFavorite//!toggleState  // this is a workaround!! find better way!!
                     }
                     .size(32.dp)
             )

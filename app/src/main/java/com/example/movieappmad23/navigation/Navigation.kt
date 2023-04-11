@@ -24,7 +24,7 @@ fun Navigation() {
         }
 
         composable(Screen.AddMovieScreen.route) {
-            AddMovieScreen(navController = navController)
+            AddMovieScreen(navController = navController, movieViewModel = movieViewModel)
         }
 
         // build a route like: root/detail-screen/id=34

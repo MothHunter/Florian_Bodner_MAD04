@@ -7,6 +7,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.movieappmad23.models.Movie
 import com.example.movieappmad23.models.MovieViewModel
 import com.example.movieappmad23.widgets.HorizontalScrollableImageView
 import com.example.movieappmad23.widgets.MovieRow
@@ -31,13 +32,14 @@ fun DetailScreen(
                 }
             },
         ) { padding ->
-            MainContent(Modifier.padding(padding), movieViewModel = movieViewModel, movieId)
+            MainContent(Modifier.padding(padding), movie,
+                onFavIconClick = {movieViewModel.toggleFavorite(movie.id)})
         }
     }
 }
 
 @Composable
-fun MainContent(modifier: Modifier = Modifier, movieViewModel: MovieViewModel, movieId: String) {
+fun MainContent(modifier: Modifier = Modifier, movie: Movie, onFavIconClick: (String) -> Unit) {
     Surface(
         modifier = modifier
             .fillMaxWidth()
@@ -49,7 +51,7 @@ fun MainContent(modifier: Modifier = Modifier, movieViewModel: MovieViewModel, m
             verticalArrangement = Arrangement.Top
         ) {
 
-            MovieRow(movieViewModel, movieId)
+            MovieRow(movie, onFavIconClick = onFavIconClick)
 
             Spacer(modifier = Modifier.height(8.dp))
 
@@ -57,7 +59,7 @@ fun MainContent(modifier: Modifier = Modifier, movieViewModel: MovieViewModel, m
 
             Text(text = "Movie Images", style = MaterialTheme.typography.h5)
 
-            HorizontalScrollableImageView(movie = movieViewModel.getMovieById(movieId))
+            HorizontalScrollableImageView(movie = movie)
         }
     }
 }

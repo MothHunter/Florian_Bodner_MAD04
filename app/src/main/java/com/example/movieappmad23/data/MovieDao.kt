@@ -17,13 +17,13 @@ interface MovieDao {
     suspend fun delete(movie: Movie)
 
     @Query("SELECT * FROM movie")
-    suspend fun getAllMovies(): Flow<List<Movie>>     // functions working with Flow don't need "suspend"?
+    fun getAllMovies(): Flow<List<Movie>>     // functions working with Flow don't need "suspend"?
     // flow = observable => notified on change
     // should be used whenever data is read
 
     @Query("SELECT * FROM movie WHERE isFavorite = 1")
-    suspend fun getAllFavorites(): Flow<List<Movie>>
+    fun getAllFavorites(): Flow<List<Movie>>
 
     @Query("SELECT * FROM movie WHERE id=:movieId")
-    suspend fun getMovieById(movieId: String): Movie
+    fun getMovieById(movieId: String): Movie
 }

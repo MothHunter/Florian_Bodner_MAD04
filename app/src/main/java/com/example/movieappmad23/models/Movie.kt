@@ -6,7 +6,7 @@ import androidx.room.TypeConverter
 
 @Entity
 data class Movie(
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     val id: String,
     val title: String,
     val year: String,

@@ -1,6 +1,12 @@
 package com.example.movieappmad23.models
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import androidx.room.TypeConverter
+
+@Entity
 data class Movie(
+    @PrimaryKey(autoGenerate = true)
     val id: String,
     val title: String,
     val year: String,
@@ -12,6 +18,7 @@ data class Movie(
     val rating: Float = 0f,
     var isFavorite: Boolean = false
 )
+
 
 fun getMovies(): List<Movie> {
     return listOf(

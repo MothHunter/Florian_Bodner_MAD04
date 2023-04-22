@@ -126,6 +126,10 @@ fun FavoriteIcon(
                     ) {
                         onFavIconClick(movie.id)
                         toggleState = movie.isFavorite//!toggleState  // this is a workaround!! find better way!!
+                        // better solution: make isFavorite as "by mutableStateOf(initialIsFavorite),
+                        // or make sure the Movie object used here is observable,
+                        // or change toggleFavorite to remove and re-add movie object to List
+                        // => change is reported
                     }
                     .size(32.dp)
             )

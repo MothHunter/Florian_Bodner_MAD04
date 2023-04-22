@@ -12,16 +12,30 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.movieappmad23.models.MovieViewModel
+import com.example.movieappmad23.data.MovieDatabase
+import com.example.movieappmad23.models.AddMovieScreenMovieViewModel
+import com.example.movieappmad23.models.HomeScreenMovieViewModel
+import com.example.movieappmad23.models.Movie
+import com.example.movieappmad23.models.MovieViewModelFactory
+import com.example.movieappmad23.repositories.MovieRepository
 import com.example.movieappmad23.widgets.HomeTopAppBar
 import com.example.movieappmad23.widgets.MovieRow
+import kotlinx.coroutines.launch
 
 @Composable
-fun HomeScreen(navController: NavController = rememberNavController(), movieViewModel: MovieViewModel){
+fun HomeScreen(navController: NavController = rememberNavController()){
+    val db = MovieDatabase.getDatabase(LocalContext.current)
+    val repository = MovieRepository(movieDao = db.movieDao())
+    val factory = MovieViewModelFactory(repository)
+    val viewModel: HomeScreenMovieViewModel = viewModel(factory = factory)
     Scaffold(topBar = {
         HomeTopAppBar(
             title = "Home",
@@ -50,7 +64,7 @@ fun HomeScreen(navController: NavController = rememberNavController(), movieView
             // @Leon: I'm not sure if we are supposed to pass the MovieViewModel down to MovieList,
             // but it seems cleaner than passing the movie list AND the onClick for the FavIcon
             // (which needs to access the viewModel)
-            movieViewModel = movieViewModel)
+            viewModel = viewModel)
     }
 }
 
@@ -58,12 +72,12 @@ fun HomeScreen(navController: NavController = rememberNavController(), movieView
 fun MainContent(
     modifier: Modifier,
     navController: NavController,
-    movieViewModel: MovieViewModel
+    viewModel: HomeScreenMovieViewModel
 ) {
     MovieList(
         modifier = modifier,
         navController = navController,
-        movieViewModel = movieViewModel
+        viewModel = viewModel
     )
 }
 
@@ -71,21 +85,28 @@ fun MainContent(
 fun MovieList(
     modifier: Modifier = Modifier,
     navController: NavController,
-    movieViewModel: MovieViewModel
+    viewModel: HomeScreenMovieViewModel
 ) {
+    val movieList = viewModel.movies.collectAsState().value
+    val coroutineScope = rememberCoroutineScope()
+
     LazyColumn (
         modifier = modifier,
         contentPadding = PaddingValues(all = 12.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        items(movieViewModel.movieList) { movie ->
+        items(movieList) { movie ->
             MovieRow(
                 movie,
                 onItemClick = { movieId ->
                     Log.d("MovieItem", "got clicked on")
                     navController.navigate(Screen.DetailScreen.withId(movieId))
                 },
-                onFavIconClick = {movieViewModel.toggleFavorite(movie.id)}
+                onFavIconClick = {
+
+                    coroutineScope.launch {
+                        viewModel.toggleFavoriteState(movie)}
+                    }
             )
         }
     }

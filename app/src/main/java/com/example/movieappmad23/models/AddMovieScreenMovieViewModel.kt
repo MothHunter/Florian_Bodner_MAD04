@@ -1,31 +1,13 @@
 package com.example.movieappmad23.models
 
 import android.util.Log
-import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.movieappmad23.repositories.MovieRepository
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 
-class MovieViewModel: ViewModel() {
-    private val _movieList = getMovies().toMutableStateList()
-    val movieList: List<Movie>
-        get() = _movieList
-    fun getFavMovieList(): List<Movie>
-    {
-        return _movieList.filter { (it.isFavorite) }
-    }
-
-    fun getMovieById(movieID: String): Movie {
-        return (_movieList.filter { it.id == movieID })[0]
-    }
-
-    fun toggleFavorite(movieID: String) {
-        Log.d("toogleFavorite", "toggleFavorite was called on Movie $movieID")
-        for (movie in _movieList) {
-            if (movie.id == movieID) {
-                Log.d("toogleFavorite", "which is ${movie.title}")
-                movie.isFavorite = !movie.isFavorite
-            }
-        }
-    }
+class AddMovieScreenMovieViewModel(private val repository: MovieRepository): ViewModel() {
 
     fun validateField(field: AddMovieFields, fieldValue: String): Boolean {
 
@@ -48,10 +30,9 @@ class MovieViewModel: ViewModel() {
 
         return fieldValue.isNotEmpty()
             // no field other than plot may be left empty
-
     }
 
-    fun addMovie(movie: Movie) {
-        _movieList.add(movie.copy(id = "new${movieList.size + 1}"))
+    suspend fun addMovie(movie: Movie) {
+        repository.add(movie.copy(id = "new${repository.getAllMovies().toList().size + 1}"))
     }
 }

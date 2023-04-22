@@ -13,19 +13,29 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.movieappmad23.R
+import com.example.movieappmad23.data.MovieDatabase
 import com.example.movieappmad23.models.*
+import com.example.movieappmad23.repositories.MovieRepository
 import com.example.movieappmad23.widgets.SimpleTopAppBar
+import kotlinx.coroutines.launch
 
 @Composable
-fun AddMovieScreen(navController: NavController, movieViewModel: MovieViewModel) {
+fun AddMovieScreen(navController: NavController) {
     val scaffoldState = rememberScaffoldState()
+    val db = MovieDatabase.getDatabase(LocalContext.current)
+    val repository = MovieRepository(movieDao = db.movieDao())
+    val factory = MovieViewModelFactory(repository)
+    val viewModel: AddMovieScreenMovieViewModel = viewModel(factory = factory)
+    val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
         scaffoldState = scaffoldState,
@@ -38,10 +48,12 @@ fun AddMovieScreen(navController: NavController, movieViewModel: MovieViewModel)
         MainContent(Modifier.padding(padding),
             validateField = { field: AddMovieFields, fieldValue: String
                 ->
-                movieViewModel.validateField(field, fieldValue)
+                viewModel.validateField(field, fieldValue)
             },
             addMovie = { movie: Movie ->
-                movieViewModel.addMovie(movie)
+                coroutineScope.launch{
+                    viewModel.addMovie(movie)
+                }
                 navController.popBackStack()
             }
         )

@@ -58,7 +58,7 @@ fun DetailScreen(
 
 
 @Composable
-fun MainContent(modifier: Modifier = Modifier, movie: Movie, onFavIconClick: (String) -> Unit) {
+fun MainContent(modifier: Modifier = Modifier, movie: Movie, onFavIconClick: (Movie) -> Unit) {
     Surface(
         modifier = modifier
             .fillMaxWidth()

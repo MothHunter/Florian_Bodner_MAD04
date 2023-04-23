@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.movieappmad23.repositories.MovieRepository
 
-// because we need to pass parameters to our TaskViewModel we need this factory class for it
+// because we need to pass parameters to our MovieViewModel we need this factory class for it
 class MovieViewModelFactory(private val repository: MovieRepository): ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(HomeScreenMovieViewModel::class.java)) {

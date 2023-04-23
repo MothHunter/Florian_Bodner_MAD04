@@ -1,5 +1,6 @@
 package com.example.movieappmad23.screens
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -30,11 +31,12 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun AddMovieScreen(navController: NavController) {
-    val scaffoldState = rememberScaffoldState()
     val db = MovieDatabase.getDatabase(LocalContext.current)
     val repository = MovieRepository(movieDao = db.movieDao())
     val factory = MovieViewModelFactory(repository)
     val viewModel: AddMovieScreenMovieViewModel = viewModel(factory = factory)
+
+    val scaffoldState = rememberScaffoldState()
     val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
@@ -52,7 +54,9 @@ fun AddMovieScreen(navController: NavController) {
             },
             addMovie = { movie: Movie ->
                 coroutineScope.launch{
+                    Log.d("AddMovieScreen", "add Movie called")
                     viewModel.addMovie(movie)
+                    Log.d("AddMovieScreen", "add Movie completed")
                 }
                 navController.popBackStack()
             }

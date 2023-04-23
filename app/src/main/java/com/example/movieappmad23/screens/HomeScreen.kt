@@ -13,6 +13,7 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -21,10 +22,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.movieappmad23.data.MovieDatabase
-import com.example.movieappmad23.models.AddMovieScreenMovieViewModel
-import com.example.movieappmad23.models.HomeScreenMovieViewModel
-import com.example.movieappmad23.models.Movie
-import com.example.movieappmad23.models.MovieViewModelFactory
+import com.example.movieappmad23.models.*
 import com.example.movieappmad23.repositories.MovieRepository
 import com.example.movieappmad23.widgets.HomeTopAppBar
 import com.example.movieappmad23.widgets.MovieRow
@@ -87,7 +85,7 @@ fun MovieList(
     navController: NavController,
     viewModel: HomeScreenMovieViewModel
 ) {
-    val movieList = viewModel.movies.collectAsState().value
+    val movieState by viewModel.movies.collectAsState()
     val coroutineScope = rememberCoroutineScope()
 
     LazyColumn (
@@ -95,7 +93,7 @@ fun MovieList(
         contentPadding = PaddingValues(all = 12.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        items(movieList) { movie ->
+        items(movieState) { movie ->
             MovieRow(
                 movie,
                 onItemClick = { movieId ->

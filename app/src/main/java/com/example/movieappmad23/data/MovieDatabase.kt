@@ -1,6 +1,7 @@
 package com.example.movieappmad23.data
 
 import android.content.Context
+import android.util.Log
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -24,11 +25,12 @@ abstract class MovieDatabase: RoomDatabase() {
         fun getDatabase(context: Context): MovieDatabase {
             return Instance?: synchronized(this) {
                 // synchronized => cannot be accessed by more than one thread at a time
-                Room.databaseBuilder(context, MovieDatabase::class.java, "task_db")
+                Room.databaseBuilder(context, MovieDatabase::class.java, "movie_db")
                     .fallbackToDestructiveMigration()
                     .build()
                     .also {
                         Instance = it   // scope function for setting scope (=???)
+                        Log.d("MovieDatabase", "created")
                     }
             }
         }

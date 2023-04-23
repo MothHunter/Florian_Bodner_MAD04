@@ -8,6 +8,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -27,7 +28,7 @@ fun FavoriteScreen(navController: NavController)
     val repository = MovieRepository(movieDao = db.movieDao())
     val factory = MovieViewModelFactory(repository)
     val viewModel: FavoriteScreenMovieViewModel = viewModel(factory = factory)
-    val movieList = viewModel.movies.collectAsState().value
+    val movieList by viewModel.movies.collectAsState()
     val coroutineScope = rememberCoroutineScope()
     Scaffold(topBar = {
         SimpleTopAppBar(arrowBackClicked = { navController.popBackStack() }) {

@@ -42,7 +42,7 @@ fun MovieRow(
     movie: Movie = getMovies()[0],
     modifier: Modifier = Modifier,
     onItemClick: (String) -> Unit = {},
-    onFavIconClick: (String) -> Unit = {}
+    onFavIconClick: (Movie) -> Unit = {}
 ) {
 
 
@@ -96,7 +96,7 @@ fun MovieImage(imageUrl: String) {
 
 @Composable
 fun FavoriteIcon(
-    onFavIconClick: (String) -> Unit,
+    onFavIconClick: (Movie) -> Unit,
     movie: Movie
 ) {
 
@@ -108,24 +108,21 @@ fun FavoriteIcon(
     ) {
         // using mutableStateOf seems like the wrong way to do this.
         // find a way to observe changes in the movie item!
-        var toggleState by remember {
-            mutableStateOf(movie.isFavorite)
-        }
         val interactionSource = remember {
             MutableInteractionSource()
         }
-        IconToggleButton(checked = toggleState, onCheckedChange = { toggleState = it }) {
+        //IconToggleButton(checked = movie.isFavorite, onCheckedChange = { toggleState = it }) {
             Icon(
                 tint = MaterialTheme.colors.secondary,
-                imageVector = if (toggleState) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                imageVector = if (movie.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                 contentDescription = "Favorite Movie",
                 modifier = Modifier
                     .clickable(
                         indication = null, // Assign null to disable the ripple effect
                         interactionSource = interactionSource,
                     ) {
-                        onFavIconClick(movie.id)
-                        toggleState = movie.isFavorite//!toggleState  // this is a workaround!! find better way!!
+                        onFavIconClick(movie)
+                        //toggleState = movie.isFavorite//!toggleState  // this is a workaround!! find better way!!
                         // better solution: make isFavorite as "by mutableStateOf(initialIsFavorite),
                         // or make sure the Movie object used here is observable,
                         // or change toggleFavorite to remove and re-add movie object to List
@@ -133,7 +130,7 @@ fun FavoriteIcon(
                     }
                     .size(32.dp)
             )
-        }
+        //}
     }
 }
 

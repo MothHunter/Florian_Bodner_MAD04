@@ -17,7 +17,11 @@ data class Movie(
     val images: List<String>,
     val rating: Float = 0f,
     var isFavorite: Boolean = false
-)
+){
+    override fun equals(other: Any?):Boolean {
+        return super.equals(other)
+    }
+}
 
 
 fun getMovies(): List<Movie> {

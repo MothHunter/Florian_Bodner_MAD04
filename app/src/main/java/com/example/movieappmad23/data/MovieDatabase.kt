@@ -11,7 +11,7 @@ import com.example.movieappmad23.utils.CustomConverters
 
 @Database(
     entities = [Movie::class/* add all tables here */],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 @TypeConverters(CustomConverters::class)

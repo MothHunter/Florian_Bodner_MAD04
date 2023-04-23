@@ -98,7 +98,7 @@ fun MovieList(
                 movie,
                 onItemClick = { movieId ->
                     Log.d("MovieItem", "got clicked on")
-                    navController.navigate(Screen.DetailScreen.withId(movieId))
+                    navController.navigate(Screen.DetailScreen.route + "/${movieId}")
                 },
                 onFavIconClick = {
 

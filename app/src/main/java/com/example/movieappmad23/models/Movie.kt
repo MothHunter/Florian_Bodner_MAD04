@@ -6,8 +6,8 @@ import androidx.room.TypeConverter
 
 @Entity
 data class Movie(
-    @PrimaryKey
-    val id: String,
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
     val title: String,
     val year: String,
     val genre: List<Genre>,
@@ -26,7 +26,7 @@ data class Movie(
 
 fun getMovies(): List<Movie> {
     return listOf(
-        Movie(id = "tt0499549",
+        Movie(
             title = "Avatar",
             year = "2009",
             genre = listOf(Genre.ACTION, Genre.ADVENTURE, Genre.FANTASY),
@@ -41,7 +41,7 @@ fun getMovies(): List<Movie> {
             rating = 7.9f
         ),
 
-        Movie(id = "tt0416449",
+        Movie(
             title = "300",
             year = "2006",
             genre = listOf(Genre.ACTION, Genre.DRAMA, Genre.FANTASY),
@@ -55,7 +55,7 @@ fun getMovies(): List<Movie> {
             rating = 7.7f
         ),
 
-        Movie(id = "tt0848228",
+        Movie(
             title = "The Avengers",
             year = "2012",
             genre = listOf(Genre.ACTION, Genre.SCIFI, Genre.THRILLER),
@@ -69,7 +69,7 @@ fun getMovies(): List<Movie> {
                 "https://images-na.ssl-images-amazon.com/images/M/MV5BMTc3MzQ3NjA5N15BMl5BanBnXkFtZTcwMzY5OTY3Nw@@._V1_SX1777_CR0,0,1777,999_AL_.jpg"),
             rating = 8.1f),
 
-        Movie(id = "tt0993846",
+        Movie(
             title = "The Wolf of Wall Street",
             year = "2013",
             genre = listOf(Genre.BIOGRAPHY, Genre.COMEDY, Genre.COMEDY),
@@ -83,7 +83,7 @@ fun getMovies(): List<Movie> {
                 "https://images-na.ssl-images-amazon.com/images/M/MV5BMTgzMTg4MDI0Ml5BMl5BanBnXkFtZTgwOTY0MzQ4MDE@._V1_SY1000_CR0,0,1553,1000_AL_.jpg"),
             rating = 8.2f),
 
-        Movie(id = "tt0816692",
+        Movie(
             title = "Interstellar",
             year = "2014",
             genre = listOf(Genre.ADVENTURE, Genre.DRAMA, Genre.SCIFI),
@@ -96,7 +96,7 @@ fun getMovies(): List<Movie> {
                 "https://images-na.ssl-images-amazon.com/images/M/MV5BMzE3MTM0MTc3Ml5BMl5BanBnXkFtZTgwMDIyODgxMzE@._V1_SX1500_CR0,0,1500,999_AL_.jpg",
                 "https://images-na.ssl-images-amazon.com/images/M/MV5BNjYzNjE2NDk3N15BMl5BanBnXkFtZTgwNzEyODgxMzE@._V1_SX1500_CR0,0,1500,999_AL_.jpg"),
             rating = 8.6f),
-        Movie(id = "tt0944947",
+        Movie(
             title = "Game of Thrones",
             year = "2011 - 2018",
             genre = listOf(Genre.ADVENTURE, Genre.DRAMA, Genre.FANTASY) ,
@@ -111,7 +111,7 @@ fun getMovies(): List<Movie> {
             rating = 9.5f),
 
 
-        Movie(id = "tt2306299",
+        Movie(
             title = "Vikings",
             year = "2013–2020",
             genre = listOf(Genre.ACTION, Genre.DRAMA, Genre.HISTORY),
@@ -125,7 +125,7 @@ fun getMovies(): List<Movie> {
                 "https://images-na.ssl-images-amazon.com/images/M/MV5BMTcxOTQ3NTA5N15BMl5BanBnXkFtZTgwMzExMDUxODE@._V1_SY1000_SX1500_AL_.jpg"),
             rating = 9.5f),
 
-        Movie(id = "tt0903747",
+        Movie(
             title = "Breaking Bad",
             year = "2008–2013",
             genre = listOf(Genre.CRIME, Genre.DRAMA, Genre.THRILLER),
@@ -139,7 +139,7 @@ fun getMovies(): List<Movie> {
                 "https://images-na.ssl-images-amazon.com/images/M/MV5BMjA5MTE3MTgwMF5BMl5BanBnXkFtZTgwOTQxMjUzMDE@._V1_SX1500_CR0,0,1500,999_AL_.jpg"),
             rating = 9.5f),
 
-        Movie(id = "tt2707408",
+        Movie(
             title = "Narcos",
             year = "2015-",
             genre = listOf(Genre.BIOGRAPHY, Genre.CRIME, Genre.DRAMA),

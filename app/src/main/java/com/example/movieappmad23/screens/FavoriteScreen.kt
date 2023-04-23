@@ -42,7 +42,7 @@ fun FavoriteScreen(navController: NavController)
                     MovieRow(
                         movie,
                         onItemClick = { movieId ->
-                            navController.navigate(route = Screen.DetailScreen.withId(movieId))
+                            navController.navigate(Screen.DetailScreen.route + "/${movieId}")
                         },
                         onFavIconClick = {
                             coroutineScope.launch {

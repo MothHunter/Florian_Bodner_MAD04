@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class DetailScreenMovieViewModel(private val repository: MovieRepository): ViewModel() {
-    suspend fun getMovieById(movieID: String): Movie {
+    suspend fun getMovieById(movieID: Int): Movie {
         return repository.getMovieById(movieID)
     }
 

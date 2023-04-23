@@ -294,7 +294,6 @@ fun MainContent(
                 onClick = {
                     addMovie(
                         Movie(
-                            id = "temp",
                             title = title,
                             year = year,
                             genre = genres,

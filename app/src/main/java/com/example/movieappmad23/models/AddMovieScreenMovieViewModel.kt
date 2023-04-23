@@ -33,8 +33,6 @@ class AddMovieScreenMovieViewModel(private val repository: MovieRepository): Vie
     }
 
     suspend fun addMovie(movie: Movie) {
-        Log.d("AddMovieVM", "add Movie called")
-        repository.add(movie)//movie.copy(id = "new${repository.getAllMovies().toList().size + 1}"))
-        Log.d("AddMovieVM", "add Movie completed")
+        repository.add(movie)
     }
 }

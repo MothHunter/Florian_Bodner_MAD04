@@ -20,19 +20,17 @@ import kotlinx.coroutines.launch
 @Composable
 fun DetailScreen(
     navController: NavController,
-    movieId:String?){
+    movieId:Int){
     val db = MovieDatabase.getDatabase(LocalContext.current)
     val repository = MovieRepository(movieDao = db.movieDao())
     val factory = MovieViewModelFactory(repository)
     val viewModel: DetailScreenMovieViewModel = viewModel(factory = factory)
     val coroutineScope = rememberCoroutineScope()
 
-    var movie: Movie = getMovies()[0]
+    var movie by remember { mutableStateOf(getMovies()[0])}
 
     LaunchedEffect(true) {
-        movieId?.let {
-            movie = viewModel.getMovieById(movieId)
-        }
+        movie = viewModel.getMovieById(movieId)
     }
 
 

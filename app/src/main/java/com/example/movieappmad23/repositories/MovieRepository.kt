@@ -40,7 +40,7 @@ class MovieRepository(private val movieDao: MovieDao) {
 
 
 
-    suspend fun getFavoriteMovies() = movieDao.getAllFavorites()
+    fun getFavoriteMovies() = movieDao.getAllFavorites()
 
-    suspend fun getMovieById(id: String) = movieDao.getMovieById(id)
+    suspend fun getMovieById(id: Int) = movieDao.getMovieById(id)
 }

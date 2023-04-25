@@ -15,7 +15,7 @@ class HomeScreenMovieViewModel(private val repository: MovieRepository): ViewMod
 
     //fun addMovies von Lena
     suspend fun addMovies(){
-        if (_movies.value.none { it.title == "Avatar" }){
+        if (movies.value.none { it.title == "Avatar" }){
             getMovies().forEach{ movie -> repository.add(movie)}
         }
     }
@@ -25,7 +25,7 @@ class HomeScreenMovieViewModel(private val repository: MovieRepository): ViewMod
         Log.d("HomeScreenVM", "init started")
         viewModelScope.launch {
             Log.d("HomeScreenVM", "coroutine launched")
-            //addMovies()
+            addMovies()
             //Log.d("HomeScreenVM", "add movies completed")
             Log.d("HomeScreenVM", "coroutine launched")
             repository.getAllMovies().collect {

@@ -22,7 +22,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.movieappmad23.data.MovieDatabase
-import com.example.movieappmad23.models.*
+import com.example.movieappmad23.models.HomeScreenMovieViewModel
+import com.example.movieappmad23.models.MovieViewModelFactory
 import com.example.movieappmad23.repositories.MovieRepository
 import com.example.movieappmad23.widgets.HomeTopAppBar
 import com.example.movieappmad23.widgets.MovieRow
@@ -98,7 +99,7 @@ fun MovieList(
                 movie,
                 onItemClick = { movieId ->
                     Log.d("MovieItem", "got clicked on")
-                    navController.navigate(Screen.DetailScreen.route + "/${movieId}")
+                    navController.navigate(Screen.DetailScreen.route.replace("{movieId}", "$movieId"))// + "/${movieId}")
                 },
                 onFavIconClick = {
 

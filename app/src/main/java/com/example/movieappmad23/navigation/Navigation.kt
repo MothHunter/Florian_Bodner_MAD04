@@ -1,16 +1,12 @@
 package com.example.movieappmad23.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.movieappmad23.models.AddMovieScreenMovieViewModel
 import com.example.movieappmad23.screens.*
-import kotlinx.coroutines.launch
 
 @Composable
 fun Navigation() {
@@ -30,7 +26,7 @@ fun Navigation() {
 
         // build a route like: root/detail-screen/id=34
         composable(
-            route = Screen.DetailScreen.route + "/{movieId}",
+            route = Screen.DetailScreen.route,
             arguments = listOf(
                 navArgument("movieId"){type = NavType.StringType },
             )

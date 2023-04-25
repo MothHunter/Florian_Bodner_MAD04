@@ -10,7 +10,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.movieappmad23.data.MovieDatabase
-import com.example.movieappmad23.models.*
+import com.example.movieappmad23.models.DetailScreenMovieViewModel
+import com.example.movieappmad23.models.Movie
+import com.example.movieappmad23.models.MovieViewModelFactory
+import com.example.movieappmad23.models.getMovies
 import com.example.movieappmad23.repositories.MovieRepository
 import com.example.movieappmad23.widgets.HorizontalScrollableImageView
 import com.example.movieappmad23.widgets.MovieRow
@@ -20,39 +23,41 @@ import kotlinx.coroutines.launch
 @Composable
 fun DetailScreen(
     navController: NavController,
-    movieId:Int){
+    movieId: Int
+) {
     val db = MovieDatabase.getDatabase(LocalContext.current)
     val repository = MovieRepository(movieDao = db.movieDao())
     val factory = MovieViewModelFactory(repository)
     val viewModel: DetailScreenMovieViewModel = viewModel(factory = factory)
     val coroutineScope = rememberCoroutineScope()
 
-    var movie by remember { mutableStateOf(getMovies()[0])}
+    var movie by remember { mutableStateOf(getMovies()[0]) }
 
     LaunchedEffect(true) {
         movie = viewModel.getMovieById(movieId)
     }
 
 
+    // needed for show/hide snackbar
+    val scaffoldState = rememberScaffoldState() // this contains the `SnackbarHostState`
 
-        // needed for show/hide snackbar
-        val scaffoldState = rememberScaffoldState() // this contains the `SnackbarHostState`
-
-        Scaffold(scaffoldState = scaffoldState, // attaching `scaffoldState` to the `Scaffold`
-            topBar = {
-                SimpleTopAppBar(arrowBackClicked = { navController.popBackStack() }) {
-                    Text(text = movie.title)
+    Scaffold(
+        scaffoldState = scaffoldState, // attaching `scaffoldState` to the `Scaffold`
+        topBar = {
+            SimpleTopAppBar(arrowBackClicked = { navController.popBackStack() }) {
+                Text(text = movie.title)
+            }
+        },
+    ) { padding ->
+        MainContent(Modifier.padding(padding), movie,
+            onFavIconClick = {
+                coroutineScope.launch {
+                    viewModel.toggleFavoriteState(movie)
                 }
-            },
-        ) { padding ->
-                MainContent(Modifier.padding(padding), movie,
-                    onFavIconClick = {
-                        coroutineScope.launch {
-                            viewModel.toggleFavoriteState(movie)
-                        }})
+            })
 
-        }
     }
+}
 
 
 @Composable

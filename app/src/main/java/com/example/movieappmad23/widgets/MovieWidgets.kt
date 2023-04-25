@@ -64,7 +64,11 @@ fun MovieRow(
                     .fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
-                MovieImage(imageUrl = movie.images[0])
+                if(movie.images.isNotEmpty()) {
+                    MovieImage(imageUrl = movie.images[0])
+                } else {
+                    MovieImage(imageUrl = "https://st.depositphotos.com/2934765/53192/v/600/depositphotos_531920820-stock-illustration-photo-available-vector-icon-default.jpg")
+                }
                 FavoriteIcon(
                     onFavIconClick = onFavIconClick,
                     movie

@@ -25,5 +25,5 @@ interface MovieDao {
     fun getAllFavorites(): Flow<List<Movie>>
 
     @Query("SELECT * FROM movie WHERE id=:movieId")
-    suspend fun getMovieById(movieId: Int): Movie
+    fun getMovieById(movieId: Int): Flow<Movie>
 }

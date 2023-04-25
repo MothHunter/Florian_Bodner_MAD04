@@ -1,14 +1,8 @@
 package com.example.movieappmad23.repositories
 
-import android.os.Debug
-import android.util.Log
-import androidx.compose.runtime.rememberCoroutineScope
 import com.example.movieappmad23.data.MovieDao
 import com.example.movieappmad23.models.Movie
-import com.example.movieappmad23.models.getMovies
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.toList
 
 class MovieRepository(private val movieDao: MovieDao) {
 
@@ -42,5 +36,5 @@ class MovieRepository(private val movieDao: MovieDao) {
 
     fun getFavoriteMovies() = movieDao.getAllFavorites()
 
-    suspend fun getMovieById(id: Int) = movieDao.getMovieById(id)
+    fun getMovieById(id: Int) : Flow<Movie?> = movieDao.getMovieById(id)
 }

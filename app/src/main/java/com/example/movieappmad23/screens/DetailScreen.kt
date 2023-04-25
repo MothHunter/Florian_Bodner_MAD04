@@ -2,7 +2,9 @@ package com.example.movieappmad23.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -11,9 +13,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.movieappmad23.data.MovieDatabase
 import com.example.movieappmad23.models.DetailScreenMovieViewModel
+import com.example.movieappmad23.models.DetailScreenMovieViewModelFactory
 import com.example.movieappmad23.models.Movie
-import com.example.movieappmad23.models.MovieViewModelFactory
-import com.example.movieappmad23.models.getMovies
 import com.example.movieappmad23.repositories.MovieRepository
 import com.example.movieappmad23.widgets.HorizontalScrollableImageView
 import com.example.movieappmad23.widgets.MovieRow
@@ -27,15 +28,11 @@ fun DetailScreen(
 ) {
     val db = MovieDatabase.getDatabase(LocalContext.current)
     val repository = MovieRepository(movieDao = db.movieDao())
-    val factory = MovieViewModelFactory(repository)
+    val factory = DetailScreenMovieViewModelFactory(repository, movieId)
     val viewModel: DetailScreenMovieViewModel = viewModel(factory = factory)
     val coroutineScope = rememberCoroutineScope()
 
-    var movie by remember { mutableStateOf(getMovies()[0]) }
-
-    LaunchedEffect(true) {
-        movie = viewModel.getMovieById(movieId)
-    }
+    var movie = viewModel.movieState.collectAsState()
 
 
     // needed for show/hide snackbar
@@ -45,14 +42,14 @@ fun DetailScreen(
         scaffoldState = scaffoldState, // attaching `scaffoldState` to the `Scaffold`
         topBar = {
             SimpleTopAppBar(arrowBackClicked = { navController.popBackStack() }) {
-                Text(text = movie.title)
+                Text(text = movie.value.title)
             }
         },
     ) { padding ->
-        MainContent(Modifier.padding(padding), movie,
+        MainContent(Modifier.padding(padding), movie.value,
             onFavIconClick = {
                 coroutineScope.launch {
-                    viewModel.toggleFavoriteState(movie)
+                    viewModel.toggleFavoriteState(movie.value)
                 }
             })
 
